@@ -25,13 +25,13 @@ setwd('D:/R-3.2.3/coursera/UCI HAR Dataset/')
 
 # Reads and stores the Train data from files
 features = read.table('./features.txt', header=FALSE) #reads and stores features.txt
-activity_labels = read.table('./activity_labels.txt', header=FALSE) #reads and stores activity_labels.txt
+activityLabels = read.table('./activity_labels.txt', header=FALSE) #reads and stores activityLabels.txt
 train_subject = read.table('./train/subject_train.txt', header=FALSE) #reads and stores subject_train.txt
 train_x = read.table('./train/X_train.txt', header=FALSE) #reads and stores X_train.txt
 train_y = read.table('./train/y_train.txt', header=FALSE) #reads and stores y_train.txt
 
 # Sets column names to the data stored above
-colnames(activity_labels) = c('activityId', 'activity_labels')
+colnames(activityLabels) = c('activityId', 'activityLabels')
 colnames(train_subject) = "subjectId"
 colnames(train_x) = features[, 2]
 colnames(train_y) = "activityId"
@@ -73,7 +73,7 @@ final_data = final_data[logical_vector == TRUE]
 
 # 3. Uses descriptive activity names to name the activities in the data set
 # Merges the final_data set with the acitivity_labels table to include descriptive activity names
-final_data = merge(final_data, activity_labels, by = 'activityId', all.x = TRUE)
+final_data = merge(final_data, activityLabels, by = 'activityId', all.x = TRUE)
 
 # Updates the col_names vector to include the new column names after merge
 col_names  = colnames(final_data)
@@ -103,14 +103,14 @@ colnames(final_data) = col_names
 
 
 # 5. Creates a second, independent tidy data set with the average of each variable for each activity and each subject. 
-# Creates a new table, finalDataNoActivityType without the activity_labels column
-finalDataNoActivityType = final_data[,names(final_data) != 'activity_labels']
+# Creates a new table, finalDataNoActivityType without the activityLabels column
+finalDataNoActivityType = final_data[,names(final_data) != 'activityLabels']
 
 # Summarizes the finalDataNoActivityType table to include just the mean of each variable for each activity and each subject
 tidy_data = aggregate(finalDataNoActivityType[,names(finalDataNoActivityType) != c('activityId','subjectId')],by=list(activityId=finalDataNoActivityType$activityId,subjectId = finalDataNoActivityType$subjectId),mean)
 
-# Merges the tidy_data with activity_labels to include descriptive acitvity names
-tidy_data = merge(tidy_data,activity_labels,by='activityId',all.x=TRUE)
+# Merges the tidy_data with activityLabels to include descriptive acitvity names
+tidy_data = merge(tidy_data,activityLabels,by='activityId',all.x=TRUE)
 
 # Export the tidyData set 
 write.table(tidy_data, './tidy_data.txt',row.names = FALSE,sep='\t')
